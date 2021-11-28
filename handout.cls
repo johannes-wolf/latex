@@ -31,11 +31,25 @@
 \RequirePackage{enumitem}
 \setitemize{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt}
 
+\newcounter{sec}
+
 \newenvironment{2col}{%
   \setitemize{noitemsep,topsep=0pt,parsep=0pt,partopsep=0pt,before=\vspace{-\baselineskip},leftmargin=0em}
+  \setcounter{sec}{0}
   \begin{longtable}[ht]{>{\bfseries}p{0.22\textwidth} p{0.72\textwidth}}
 }{%
   \end{longtable}
+}
+
+\let\origsubsection\subsection%
+\renewcommand{\subsection}[1]{%
+  \ifthenelse{\equal{\@currenvir}{longtable}}{%
+    \ifnum\the\value{sec}>0 \\ \else\fi
+    \stepcounter{sec}
+    #1 & %
+  }{%
+    \origsubsection{#1}
+  }
 }
 
 % Customize maketitle
@@ -58,6 +72,7 @@
 \setlength\topmargin{-1.25cm}
 \setlength\parindent{0in}
 \setlength\parskip{0.5em}
+\setlength\headheight{28pt}
 
 \newpairofpagestyles{handout-index}{%
   \ihead{\Author\\\Sub}
